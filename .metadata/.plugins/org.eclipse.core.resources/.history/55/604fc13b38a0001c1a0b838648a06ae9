@@ -1,0 +1,70 @@
+package com.cities.geo.service;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cities.geo.VO.Suggestions;
+import com.cities.geo.VO.geoname;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class geoService {
+
+	public int Test(int a, int b) throws Exception
+	{		
+		return a*b;
+	}
+
+	public Suggestions Suggestions(Suggestions sug) throws Exception
+	{
+		/*
+		StringTokenizer st ;
+        BufferedReader TSVFile = new BufferedReader(new FileReader("cities_canada-usa.tsv"));
+        String dataRow = TSVFile.readLine(); // Read first line.
+
+        while (dataRow != null){
+            st = new StringTokenizer(dataRow,"\t");
+            List<String>dataArray = new ArrayList<String>() ;
+            while(st.hasMoreElements()){
+                dataArray.add(st.nextElement().toString());
+            }
+            for (String item:dataArray) { 
+                System.out.print(item + "  "); 
+            }
+            System.out.println(); // Print the data line.
+            dataRow = TSVFile.readLine(); // Read next line of data.
+        }
+        // Close the file once all data has been read.
+        TSVFile.close();
+
+        // End the printout with a blank line.
+        System.out.println();
+		*/
+        
+        /*
+         * Test
+        */
+		
+		return null;
+	}
+
+	public geoname GetAll(geoname geo)
+	{
+        
+		InputStream inJson = geoname.class.getResourceAsStream("/test.json");
+        geoname sample = new ObjectMapper().readValue(inJson, geoname.class);
+        
+		return null;
+	}
+
+}

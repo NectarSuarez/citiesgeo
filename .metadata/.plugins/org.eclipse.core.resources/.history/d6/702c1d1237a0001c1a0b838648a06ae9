@@ -1,0 +1,7 @@
+package com.cities.geo.VO;
+
+public class geoname
+{
+	integer id;
+	
+}

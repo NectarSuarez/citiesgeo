@@ -1,0 +1,9 @@
+package com.cities.geo.VO;
+
+public class Suggestions
+{
+	private String name;
+	private double lat;
+	private double longt;
+	private double score;
+}

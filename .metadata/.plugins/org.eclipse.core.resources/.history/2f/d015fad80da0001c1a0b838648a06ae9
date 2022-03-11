@@ -1,0 +1,11 @@
+package com.cities.service;
+
+public class citiesService {
+
+	public int Sonar(int a, int b)
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

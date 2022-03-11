@@ -1,0 +1,183 @@
+package com.cities.geo.service;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cities.geo.VO.Suggestions;
+import com.cities.geo.VO.geoname;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.google.common.base.Predicates;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonReader;
+import org.apache.commons.text.similarity.LevenshteinDistance;
+
+@Service
+public class geoService {
+
+	public int Test(int a, int b) throws Exception
+	{		
+		return a*b;
+	}
+
+	public Suggestions Suggestions(Suggestions sug) throws Exception
+	{
+		return null;
+	}
+
+	public List<geoname> GetAll(geoname geo) throws StreamReadException, DatabindException, IOException
+	{
+		List<geoname> FL = new ArrayList<geoname>();
+		        
+		FL = ByName("London");
+		FL = Score(FL, 42.98339,-81.23304);
+		
+		return FL;
+	}
+	
+	public List<geoname> ByName(String Name) throws StreamReadException, DatabindException, IOException
+	{
+		String fileName = "test.json";
+		List<geoname> sample2 = new ArrayList<geoname>();
+		
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        CollectionType collectionTypes = mapper.getTypeFactory().constructCollectionType(List.class, geoname.class);
+        sample2 = mapper.readValue(new File(fileName), collectionTypes);
+
+        List<geoname> filteredList = new ArrayList<geoname>();
+
+        for (int i = 0; i < sample2.size()-1; i++)
+        {
+        	if (sample2.get(i).getAlt_name().contains(Name))
+        	{
+        		sample2.get(i).setScore(similarity(Name, sample2.get(i).getName())*0.34);
+        		filteredList.add(sample2.get(i));
+        		
+        		/*
+        		*/
+        		levensteinRatio(Name, sample2.get(i).getName());
+			}
+        }
+        
+		return filteredList;
+	}
+	
+	public List<geoname> Score(List<geoname> FilList, double Lat, double Lon) throws StreamReadException, DatabindException, IOException
+	{
+		double ScLat;
+		double ScLon;
+		
+		List<geoname> FilListNew = new ArrayList<geoname>();
+
+        for (int i = 0; i < FilList.size()-1; i++)
+        {
+        	ScLat = FilList.get(i).getLat()-Lat;
+        	ScLat = ScLat/10;
+        	ScLat = 1 - ScLat;
+        	ScLat = ScLat * 0.33;
+        	
+        	ScLon = FilList.get(i).getLongt()-Lon;
+        	ScLon = ScLon/10;
+        	ScLon = 1 - ScLon;
+        	ScLon = ScLon * 0.33;
+        	
+        	FilList.get(i).setScore(FilList.get(i).getScore()+ScLat+ScLon);
+        	
+        	FilListNew.add(FilList.get(i));
+        }
+        
+		return FilListNew;
+	}
+	
+	public static double similarity(String s1, String s2)
+	{
+		if (s1.length() < s2.length())
+		{
+			String swap = s1; s1 = s2; s2 = swap;
+		}
+		int bigLen = s1.length();
+		if (bigLen == 0)
+		{
+			return 1.0; 
+		}
+		return (bigLen - levenshteinDistance(s1, s2)) / (double) bigLen;
+	}
+	
+    public static int levenshteinDistance(CharSequence Str1, CharSequence Str2)
+    {
+    	// Si ambos son iguales, la distancia es 0
+        if (Str1.equals(Str2))
+        {
+            return 0;
+        }
+
+        
+        int len0 = Str1.length() + 1;
+        int len1 = Str2.length() + 1;
+
+        // the array of distances
+        int[] cost = new int[len0];
+        int[] newcost = new int[len0];
+
+        // initial cost of skipping prefix in String s0
+        for (int i = 0; i < len0; i++)
+            cost[i] = i;
+
+        // dynamically computing the array of distances
+
+        // transformation cost for each letter in s1
+        for (int j = 1; j < len1; j++) {
+            // initial cost of skipping prefix in String s1
+            newcost[0] = j;
+
+            // transformation cost for each letter in s0
+            for (int i = 1; i < len0; i++) {
+                // matching current letters in both strings
+                int match = (Str1.charAt(i - 1) == Str2.charAt(j - 1)) ? 0 : 1;
+
+                // computing cost for each transformation
+                int cost_replace = cost[i - 1] + match;
+                int cost_insert = cost[i] + 1;
+                int cost_delete = newcost[i - 1] + 1;
+
+                // keep minimum cost
+                newcost[i] = Math.min(Math.min(cost_insert, cost_delete), cost_replace);
+            }
+
+            // swap cost/newcost arrays
+            int[] swap = cost;
+            cost = newcost;
+            newcost = swap;
+        }
+
+        // the distance is the cost for transforming all letters in both strings
+        return cost[len0 - 1];
+    }
+    
+    public static double levensteinRatio(String s, String s1)
+    {
+    	LevenshteinDistance lv = new LevenshteinDistance();
+        return 1 - ((double) lv.apply(s, s1)) / Math.max(s.length(), s1.length());
+    }
+
+}

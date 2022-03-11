@@ -1,0 +1,36 @@
+package com.cities.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cities.service.citiesService;
+
+@ControllerAdvice
+@RestController
+@RequestMapping("Credito")
+public class citiesController
+{
+
+	@Autowired
+	citiesService citiesService;
+	
+	@PostMapping(value = "/Sonar", produces = MediaType.APPLICATION_JSON_VALUE)
+	public int MultiSinSigno(@RequestParam("a")int A, @RequestParam("b") int B)
+	{
+		return citiesService.Sonar(A, B);
+	}
+	
+	@PostMapping(value = "/suggestions", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Cotizacion GetCotizacion(@RequestBody Cotizacion cot)
+	{
+		return citiesService.GetCotizacion(cot);
+	}
+	
+}

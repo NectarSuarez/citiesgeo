@@ -1,0 +1,23 @@
+package com.cities.geo.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cities.geo.VO.Suggestions;
+
+@Service
+public class geoService {
+
+	public int Test(int a, int b)
+	{
+		return a*b;
+	}
+
+	public Suggestions Suggestions(Suggestions sug)
+	{
+		return null;
+	}
+
+}

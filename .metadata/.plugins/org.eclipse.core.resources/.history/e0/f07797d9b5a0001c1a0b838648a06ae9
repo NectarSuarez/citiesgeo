@@ -1,0 +1,25 @@
+package com.cities.geo.VO;
+
+public class Suggestions
+{
+	private int id;
+	private String name;
+	private String ascii;
+	private String alt_name;
+	private double lat;
+	private double longt;
+	private String feat_class;
+	private String feat_code;
+	private String country;
+	private String cc2;
+	private String admin1;
+	private String admin2;
+	private String admin3;
+	private String admin4;
+	private String population;
+	private String elevation;
+	private String dem;
+	private String tz;
+	private String modified_at;
+	private double score;
+}

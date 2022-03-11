@@ -1,0 +1,44 @@
+package com.cities.geo.VO;
+
+public class Suggestions
+{
+	private String name;
+	private double lat;
+	private double longt;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public double getLat() {
+		return lat;
+	}
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+	public double getLongt() {
+		return longt;
+	}
+	public void setLongt(double longt) {
+		this.longt = longt;
+	}
+	public double getScore() {
+		return score;
+	}
+	public void setScore(double score) {
+		this.score = score;
+	}
+	private double score;
+	public Suggestions(String name, double lat, double longt, double score) {
+		super();
+		this.name = name;
+		this.lat = lat;
+		this.longt = longt;
+		this.score = score;
+	}
+	public Suggestions() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+}
